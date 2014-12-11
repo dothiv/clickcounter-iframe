@@ -2,6 +2,7 @@ package clickcounteriframe
 
 import (
 	"database/sql"
+	"strings"
 
 	_ "github.com/lib/pq"
 )
@@ -19,6 +20,8 @@ type DomainRepository struct {
 	FIELDS        string
 	OFFSET_FIELD  string
 	CREATED_FIELD string
+	UPDATED_FIELD string
+	fields        []string
 }
 
 func NewDomainRepository(db *sql.DB) (repo *DomainRepository) {
@@ -28,6 +31,8 @@ func NewDomainRepository(db *sql.DB) (repo *DomainRepository) {
 	repo.FIELDS = "name, redirect"
 	repo.OFFSET_FIELD = "id"
 	repo.CREATED_FIELD = "created"
+	repo.UPDATED_FIELD = "updated"
+	repo.fields = []string{repo.OFFSET_FIELD, repo.FIELDS, repo.CREATED_FIELD, repo.UPDATED_FIELD}
 	return
 }
 
@@ -53,6 +58,7 @@ func (repo *DomainRepository) Remove(domain *Domain) (err error) {
 
 func (repo *DomainRepository) FindByName(name string) (domain *Domain, err error) {
 	domain = new(Domain)
-	err = repo.db.QueryRow("SELECT "+repo.OFFSET_FIELD+","+repo.FIELDS+","+repo.CREATED_FIELD+" FROM "+repo.TABLE_NAME+" WHERE name = $1", name).Scan(&domain.Id, &domain.Name, &domain.Redirect, &domain.Created)
+
+	err = repo.db.QueryRow("SELECT "+strings.Join(repo.fields, ",")+" FROM "+repo.TABLE_NAME+" WHERE name = $1", name).Scan(&domain.Id, &domain.Name, &domain.Redirect, &domain.Created, &domain.Updated)
 	return
 }

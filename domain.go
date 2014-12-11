@@ -11,4 +11,5 @@ type Domain struct {
 	Name     string
 	Redirect string
 	Created  *time.Time
+	Updated  *time.Time
 }
