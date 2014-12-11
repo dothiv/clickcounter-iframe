@@ -1,3 +1,5 @@
+[auth]
+token = secret
 [server]
 port = 80
 hostname = iframe2.click4life.hiv

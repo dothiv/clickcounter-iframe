@@ -16,10 +16,14 @@ func Serve(c *Config) (err error) {
 
 	log.Println(fmt.Sprintf("Starting server on port %d ...", c.Server.Port))
 
-	iframeCntrl := new(IframeController)
-	iframeCntrl.domainRepo = NewDomainRepository(db)
-	http.HandleFunc("/", iframeCntrl.IframeHandler)
+	domainRepo := NewDomainRepository(db)
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", c.Server.Port), nil))
+	iframeCntrl := NewIframeController(domainRepo, c.Server.Hostname)
+	adminCntrl := NewAdminController(domainRepo, c.Auth.Token)
+
+	reHandler := new(RegexpHandler)
+	reHandler.AddRoute("^/domain/([^/]+)$", adminCntrl.DomainHandler)
+	reHandler.AddRoute("^/$", iframeCntrl.IframeHandler)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", c.Server.Port), reHandler))
 	return
 }

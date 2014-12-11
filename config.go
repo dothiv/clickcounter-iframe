@@ -6,10 +6,15 @@ import (
 	"code.google.com/p/gcfg"
 )
 
+const VERSION = "1"
+
 type Config struct {
 	Server struct {
 		Port     int
 		Hostname string
+	}
+	Auth struct {
+		Token string
 	}
 	Database struct {
 		Host     string
