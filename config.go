@@ -13,9 +13,6 @@ type Config struct {
 		Port     int
 		Hostname string
 	}
-	Auth struct {
-		Token string
-	}
 	Database struct {
 		Host     string
 		Name     string

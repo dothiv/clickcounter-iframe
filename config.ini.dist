@@ -1,10 +1,8 @@
-[auth]
-token = secret
 [server]
-port = 80
-hostname = iframe2.click4life.hiv
+port = 8887
+hostname = iframe.click4life.hiv
 [database]
 host = localhost
-name =  clickcounter-iframe
-user = clickcounter-iframe
+name =  clickcounteriframe
+user = clickcounteriframe
 ; password = null

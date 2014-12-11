@@ -12,13 +12,11 @@ import (
 
 type AdminController struct {
 	domainRepo DomainRepositoryInterface
-	authToken  string
 }
 
-func NewAdminController(d DomainRepositoryInterface, authToken string) (c *AdminController) {
+func NewAdminController(d DomainRepositoryInterface) (c *AdminController) {
 	c = new(AdminController)
 	c.domainRepo = d
-	c.authToken = authToken
 	return
 }
 
@@ -34,10 +32,6 @@ func (c *AdminController) DomainHandler(w http.ResponseWriter, r *http.Request, 
 	}
 	if r.Header.Get("Content-Type") != "application/json" {
 		hivdomainstatus.HttpProblem(w, http.StatusBadRequest, "Expected application/json")
-		return
-	}
-	if r.Header.Get("Authorization") != "Bearer "+c.authToken {
-		w.WriteHeader(http.StatusForbidden)
 		return
 	}
 
@@ -79,10 +73,6 @@ func (c *AdminController) DomainHandler(w http.ResponseWriter, r *http.Request, 
 }
 
 func (c *AdminController) deleteDomain(w http.ResponseWriter, r *http.Request, matches []string) {
-	if r.Header.Get("Authorization") != "Bearer "+c.authToken {
-		w.WriteHeader(http.StatusForbidden)
-		return
-	}
 	domain, domainErr := c.domainRepo.FindByName(matches[1])
 	if domainErr != nil {
 		hivdomainstatus.HttpProblem(w, http.StatusNotFound, fmt.Sprintf("domain not found: %s", matches[1]))

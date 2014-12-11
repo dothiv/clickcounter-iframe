@@ -20,7 +20,7 @@ func SetupAdminTest(t *testing.T) (cntrl *AdminController, domainRepo DomainRepo
 	db, _ := sql.Open("postgres", c.DSN())
 
 	domainRepo = NewDomainRepository(db)
-	cntrl = NewAdminController(domainRepo, "letmein")
+	cntrl = NewAdminController(domainRepo)
 	db.Exec("TRUNCATE domain RESTART IDENTITY")
 
 	return
@@ -42,7 +42,6 @@ func TestThatItCreatesDomainConfig(t *testing.T) {
 		t.Fatal(err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer letmein")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -82,7 +81,6 @@ func TestThatItUpdatesDomainConfig(t *testing.T) {
 		t.Fatal(err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer letmein")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -120,7 +118,6 @@ func TestThatItDeletesDomainConfig(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	req.Header.Set("Authorization", "Bearer letmein")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
