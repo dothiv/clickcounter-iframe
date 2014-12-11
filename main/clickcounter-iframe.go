@@ -12,7 +12,11 @@ func error(msg string) {
 }
 
 func main() {
-	c, err := clickcounteriframe.NewConfig()
+	configFilename := "config.ini"
+	if len(os.Args) > 2 {
+		configFilename = os.Args[2]
+	}
+	c, err := clickcounteriframe.NewConfig(configFilename)
 	if err != nil {
 		error(err.Error())
 		os.Exit(1)

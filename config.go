@@ -39,8 +39,8 @@ func NewDefaultConfig() (c *Config) {
 	return
 }
 
-func NewConfig() (c *Config, err error) {
+func NewConfig(fileName string) (c *Config, err error) {
 	c = NewDefaultConfig()
-	err = gcfg.ReadFileInto(c, "config.ini")
+	err = gcfg.ReadFileInto(c, fileName)
 	return
 }
