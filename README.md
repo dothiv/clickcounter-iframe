@@ -11,7 +11,11 @@ It is set up as a microservice which is managed by a RESTful API.
 Create a databse to run the tests on:
 
     CREATE USER clickcounteriframe;
-	CREATE DATABASE clickcounteriframe;
-	GRANT ALL PRIVILEGES ON DATABASE clickcounteriframe TO clickcounteriframe;
+    CREATE DATABASE clickcounteriframe;
+    GRANT ALL PRIVILEGES ON DATABASE clickcounteriframe TO clickcounteriframe;
 	
-	psql -H localhost -U clickcounteriframe -d clickcounteriframe < sql/domain.sql
+    psql -H localhost -U clickcounteriframe -d clickcounteriframe < sql/domain.sql
+
+Run the tests
+
+    go test ./...
