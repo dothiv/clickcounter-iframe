@@ -2,8 +2,10 @@ package clickcounteriframe
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"regexp"
 	"strings"
 	"text/template"
@@ -12,67 +14,15 @@ import (
 
 type IframeController struct {
 	domainRepo     DomainRepositoryInterface
-	hostname       string
 	cacheLifetTime time.Duration
 }
 
-func NewIframeController(d DomainRepositoryInterface, hostname string) (c *IframeController) {
+func NewIframeController(d DomainRepositoryInterface) (c *IframeController) {
 	c = new(IframeController)
 	c.domainRepo = d
-	c.hostname = hostname
 	c.cacheLifetTime = time.Minute * 30
 	return
 }
-
-var iframeTpl = `<!DOCTYPE html>
-<!--
-
-
-            _|_|          _|_|
-            _|_|          _|_|
-            _|_|
-            _|_|
-            _|_|_|_|      _|_|  _|_|    _|_|
-            _|_|_|_|_|    _|_|  _|_|    _|_|
-            _|_|    _|_|  _|_|  _|_|    _|_|
-            _|_|    _|_|  _|_|  _|_|    _|_|
-            _|_|    _|_|  _|_|  _|_|    _|_|
-      _|_|  _|_|    _|_|  _|_|    _|_|_|_|
-      _|_|  _|_|    _|_|  _|_|      _|_|
-
-      .hiv domains – The digital Red Ribbon
-
-                  click4life.hiv
-
--->
-<html>
-<head>
-    <title>{{.Name}}</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style type="text/css">
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        #clickcounter-target-iframe {
-            border: 0;
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
-</head>
-<body>
-<iframe src="{{.Redirect}}" width="100%" height="100%" id="clickcounter-target-iframe"></iframe>
-<script src="//dothiv-registry.appspot.com/static/clickcounter.min.js" type="text/javascript"></script>
-</body>
-</html>`
 
 func (c *IframeController) IframeHandler(w http.ResponseWriter, r *http.Request, matches []string) {
 	w.Header().Add("X-Click-Counter-Iframe-Version", VERSION)
@@ -99,11 +49,61 @@ func (c *IframeController) IframeHandler(w http.ResponseWriter, r *http.Request,
 	w.Header().Add("Expires", time.Now().Add(c.cacheLifetTime).Format(http.TimeFormat))
 	w.Header().Add("Last-Modified", domain.Updated.Format(http.TimeFormat))
 
-	t := template.Must(template.New("iframe").Parse(iframeTpl))
-	err = t.Execute(w, domain)
-	if err != nil {
-		log.Println("failed to parse template:", err)
+	var tpl *template.Template
+	if len(domain.Redirect) > 0 {
+		tpl, err = getIframeTemplate()
+	} else {
+		tpl, err = getLandingPageTemplate()
+		if &domain.LandingPage.Tweet != nil {
+			domain.LandingPage.TweetEncoded = url.QueryEscape(domain.LandingPage.Tweet)
+		}
 	}
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println("failed to load template")
+		log.Println(err.Error())
+		return
+	}
+	err = tpl.Execute(w, domain)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println("failed to parse template")
+		log.Println(err.Error())
+		return
+	}
+}
+
+var iframeTpl *template.Template
+
+func getIframeTemplate() (tpl *template.Template, err error) {
+	if iframeTpl == nil {
+		iframeTpl, err = loadTemplate("iframe", "./templates/iframe.html")
+		if err != nil {
+			return
+		}
+	}
+	return iframeTpl, err
+}
+
+var landingPageTpl *template.Template
+
+func getLandingPageTemplate() (tpl *template.Template, err error) {
+	//if landingPageTpl == nil {
+	landingPageTpl, err = loadTemplate("landingpage", "./templates/landingpage.html")
+	if err != nil {
+		return
+	}
+	//}
+	return landingPageTpl, err
+}
+
+func loadTemplate(ident string, filename string) (tpl *template.Template, err error) {
+	tplSource, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return
+	}
+	tpl = template.Must(template.New(ident).Parse(string(tplSource)))
+	return
 }
 
 func (c *IframeController) getSecondLevelName(r *http.Request) (secondLevelName string, err error) {

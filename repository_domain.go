@@ -2,6 +2,8 @@ package clickcounteriframe
 
 import (
 	"database/sql"
+	"encoding/json"
+	"log"
 	"strings"
 
 	_ "github.com/lib/pq"
@@ -28,7 +30,7 @@ func NewDomainRepository(db *sql.DB) (repo *DomainRepository) {
 	repo = new(DomainRepository)
 	repo.db = db
 	repo.TABLE_NAME = "domain"
-	repo.FIELDS = "name, redirect"
+	repo.FIELDS = "name, redirect, landingpage"
 	repo.OFFSET_FIELD = "id"
 	repo.CREATED_FIELD = "created"
 	repo.UPDATED_FIELD = "updated"
@@ -37,14 +39,20 @@ func NewDomainRepository(db *sql.DB) (repo *DomainRepository) {
 }
 
 func (repo *DomainRepository) Persist(domain *Domain) (err error) {
+	domain.LandingPageJson, err = json.Marshal(domain.LandingPage)
+	if err != nil {
+		log.Fatalln(err.Error())
+		return
+	}
+
 	if domain.Id > 0 {
 		_, err = repo.db.Exec("UPDATE "+repo.TABLE_NAME+" "+
-			"SET redirect = $1 WHERE id = $2", domain.Redirect, domain.Id)
+			"SET redirect = $1, landingpage = $2 WHERE id = $3", domain.Redirect, domain.LandingPageJson, domain.Id)
 	} else {
 		err = repo.db.QueryRow("INSERT INTO "+repo.TABLE_NAME+" "+
 			"("+repo.FIELDS+") "+
-			"VALUES($1, $2) RETURNING id, created",
-			domain.Name, domain.Redirect).Scan(&domain.Id, &domain.Created)
+			"VALUES($1, $2, $3) RETURNING id, created",
+			domain.Name, domain.Redirect, domain.LandingPageJson).Scan(&domain.Id, &domain.Created)
 	}
 	return
 }
@@ -59,6 +67,10 @@ func (repo *DomainRepository) Remove(domain *Domain) (err error) {
 func (repo *DomainRepository) FindByName(name string) (domain *Domain, err error) {
 	domain = new(Domain)
 
-	err = repo.db.QueryRow("SELECT "+strings.Join(repo.fields, ",")+" FROM "+repo.TABLE_NAME+" WHERE name = $1", name).Scan(&domain.Id, &domain.Name, &domain.Redirect, &domain.Created, &domain.Updated)
+	err = repo.db.QueryRow("SELECT "+strings.Join(repo.fields, ",")+" FROM "+repo.TABLE_NAME+" WHERE name = $1", name).Scan(&domain.Id, &domain.Name, &domain.Redirect, &domain.LandingPageJson, &domain.Created, &domain.Updated)
+	err = json.Unmarshal(domain.LandingPageJson, &domain.LandingPage)
+	if err != nil {
+		return
+	}
 	return
 }

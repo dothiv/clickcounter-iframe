@@ -22,12 +22,28 @@ func SetupDomainTest(t *testing.T) (cntrl *IframeController) {
 	cntrl = NewIframeController(domainRepo)
 	db.Exec("TRUNCATE domain RESTART IDENTITY")
 
-	domain := new(Domain)
-	domain.Name = "thjnk.hiv"
-	domain.Redirect = "http://www.thjnk.de/"
 	repo := NewDomainRepository(db)
-	persistErr := repo.Persist(domain)
-	assert.Nil(persistErr)
+
+	thjnk := new(Domain)
+	thjnk.Name = "thjnk.hiv"
+	thjnk.Redirect = "http://www.thjnk.de/"
+	assert.Nil(repo.Persist(thjnk))
+
+	caro4life := new(Domain)
+	caro4life.Name = "caro4life.hiv"
+	lp := new(LandingPage)
+	lp.Locale = "en"
+	lp.Title = "Carolin's digital Red Ribbon"
+	lp.About = "I support the global, digital movement to see the end of AIDS. Together we can do it! Let’s build an AIDS free generation."
+	lp.MicroDonation = "Every visit to this website triggers a much needed donation to global HIV projects. Thank you!"
+	lp.LearnMore = "Learn more"
+	lp.GetYourOwn = "Get your own"
+	lp.TellYourFriends = "Tell your friends:"
+	lp.Tweet = "Lets work together to see an #AIDS free generation @dotHIV – caro4life.hiv"
+	lp.Imprint = "Imprint"
+
+	caro4life.LandingPage = lp
+	assert.Nil(repo.Persist(caro4life))
 
 	return
 }
@@ -56,4 +72,30 @@ func TestThatItReturnsTheIframe(t *testing.T) {
 	assert.Contains(res.Header.Get("Content-Type"), "text/html")
 	assert.Contains(body, "<title>thjnk.hiv</title>")
 	assert.Contains(body, `<iframe src="http://www.thjnk.de/" width="100%" height="100%" id="clickcounter-target-iframe"></iframe>`)
+}
+
+func TestThatItReturnsTheLandingpage(t *testing.T) {
+	assert := assert.New(t)
+
+	cntrl := SetupDomainTest(t)
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		r.Host = "caro4life.hiv"
+		cntrl.IframeHandler(w, r, []string{})
+	}))
+	defer ts.Close()
+
+	res, err := http.Get(ts.URL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	b, err := ioutil.ReadAll(res.Body)
+	res.Body.Close()
+	if err != nil {
+		t.Fatal(err)
+	}
+	body := string(b)
+	assert.Contains(res.Header.Get("Content-Type"), "text/html")
+	assert.Contains(body, `<html lang="en"`)
+	assert.Contains(body, `Carolin's digital Red Ribbon`)
 }

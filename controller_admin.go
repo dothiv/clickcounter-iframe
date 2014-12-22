@@ -41,7 +41,8 @@ func (c *AdminController) DomainHandler(w http.ResponseWriter, r *http.Request, 
 		return
 	}
 	var data struct {
-		Redirect string
+		Redirect    string
+		LandingPage *LandingPage `json:"landingPage"`
 	}
 	unmarshalErr := json.Unmarshal(b, &data)
 	if unmarshalErr != nil {
@@ -63,6 +64,7 @@ func (c *AdminController) DomainHandler(w http.ResponseWriter, r *http.Request, 
 		created = true
 	}
 	domain.Redirect = redirect.String()
+	domain.LandingPage = data.LandingPage
 	c.domainRepo.Persist(domain)
 	if created {
 		w.Header().Add("Location", r.URL.String())

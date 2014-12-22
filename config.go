@@ -10,8 +10,7 @@ const VERSION = "1"
 
 type Config struct {
 	Server struct {
-		Port     int
-		Hostname string
+		Port int
 	}
 	Database struct {
 		Host     string
