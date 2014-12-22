@@ -19,7 +19,7 @@ func SetupDomainTest(t *testing.T) (cntrl *IframeController) {
 	db, _ := sql.Open("postgres", c.DSN())
 
 	domainRepo := NewDomainRepository(db)
-	cntrl = NewIframeController(domainRepo, "iframe.click4life.hiv")
+	cntrl = NewIframeController(domainRepo)
 	db.Exec("TRUNCATE domain RESTART IDENTITY")
 
 	domain := new(Domain)
@@ -38,7 +38,7 @@ func TestThatItReturnsTheIframe(t *testing.T) {
 	cntrl := SetupDomainTest(t)
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		r.Host = "thjnk.iframe.click4life.hiv"
+		r.Host = "thjnk.hiv"
 		cntrl.IframeHandler(w, r, []string{})
 	}))
 	defer ts.Close()

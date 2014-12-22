@@ -81,7 +81,13 @@ func (c *IframeController) IframeHandler(w http.ResponseWriter, r *http.Request,
 		return
 	}
 	w.Header().Add("Content-Type", "text/html; charset=UTF-8")
-	hivDomainName := c.getHivDomainName(r) + ".hiv"
+	secondLevelName, err := c.getSecondLevelName(r)
+	hivDomainName := secondLevelName + ".hiv"
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		log.Println(err.Error())
+		return
+	}
 	domain, err := c.domainRepo.FindByName(hivDomainName)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -100,8 +106,14 @@ func (c *IframeController) IframeHandler(w http.ResponseWriter, r *http.Request,
 	}
 }
 
-func (c *IframeController) getHivDomainName(r *http.Request) (hostname string) {
-	var hostNameMatch = regexp.MustCompile(`([^\.]+)\.` + c.hostname)
-	hostname = hostNameMatch.FindStringSubmatch(strings.Split(r.Host, ":")[0])[1]
+func (c *IframeController) getSecondLevelName(r *http.Request) (secondLevelName string, err error) {
+	var hostNameMatch = regexp.MustCompile(`([^\.]+)\.hiv$`)
+	domainName := strings.Split(r.Host, ":")[0]
+	match := hostNameMatch.FindStringSubmatch(domainName)
+	if len(match) == 0 {
+		err = fmt.Errorf("Not a .hiv domain name: %s", domainName)
+		return
+	}
+	secondLevelName = match[1]
 	return
 }

@@ -1,6 +1,5 @@
 [server]
 port = 8887
-hostname = iframe.click4life.hiv
 [database]
 host = localhost
 name =  travis_ci_test

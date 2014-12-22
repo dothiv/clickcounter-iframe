@@ -43,7 +43,7 @@ func Serve(c *Config) (err error) {
 
 	domainRepo := NewDomainRepository(db)
 
-	iframeCntrl := NewIframeController(domainRepo, c.Server.Hostname)
+	iframeCntrl := NewIframeController(domainRepo)
 	adminCntrl := NewAdminController(domainRepo)
 
 	reHandler := new(RegexpHandler)
