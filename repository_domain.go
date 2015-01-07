@@ -68,6 +68,9 @@ func (repo *DomainRepository) FindByName(name string) (domain *Domain, err error
 	domain = new(Domain)
 
 	err = repo.db.QueryRow("SELECT "+strings.Join(repo.fields, ",")+" FROM "+repo.TABLE_NAME+" WHERE name = $1", name).Scan(&domain.Id, &domain.Name, &domain.Redirect, &domain.LandingPageJson, &domain.Created, &domain.Updated)
+	if err != nil {
+		return
+	}
 	err = json.Unmarshal(domain.LandingPageJson, &domain.LandingPage)
 	if err != nil {
 		return

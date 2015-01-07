@@ -22,7 +22,8 @@ func TestThatItPersistsADomain(t *testing.T) {
 	// Persist
 	domain := new(Domain)
 	domain.Name = "thjnk.hiv"
-	domain.Redirect = "http://www.thjnk.de/"
+	domain.Redirect.String = "http://www.thjnk.de/"
+	domain.Redirect.Valid = true
 	repo := NewDomainRepository(db)
 	persistErr := repo.Persist(domain)
 	assert.Nil(persistErr)
@@ -33,5 +34,5 @@ func TestThatItPersistsADomain(t *testing.T) {
 
 	assert.Equal(1, d.Id)
 	assert.Equal("thjnk.hiv", d.Name)
-	assert.Equal("http://www.thjnk.de/", d.Redirect)
+	assert.Equal("http://www.thjnk.de/", d.Redirect.String)
 }

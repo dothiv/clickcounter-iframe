@@ -1,6 +1,9 @@
 package clickcounteriframe
 
-import "time"
+import (
+	"database/sql"
+	"time"
+)
 
 type EntityInterface interface {
 }
@@ -9,7 +12,7 @@ type Domain struct {
 	EntityInterface
 	Id              int64
 	Name            string
-	Redirect        string
+	Redirect        sql.NullString
 	LandingPageJson []byte
 	LandingPage     *LandingPage
 	Created         *time.Time
@@ -17,6 +20,11 @@ type Domain struct {
 }
 
 type LandingPage struct {
+	DefaultLocale string `json:"defaultLocale"`
+	Strings       map[string]*LandingPageText
+}
+
+type LandingPageText struct {
 	Locale          string `json:"locale"`
 	Title           string `json:"title"`
 	About           string `json:"about"`

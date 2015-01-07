@@ -63,7 +63,11 @@ func (c *AdminController) DomainHandler(w http.ResponseWriter, r *http.Request, 
 		domain.Name = matches[1]
 		created = true
 	}
-	domain.Redirect = redirect.String()
+	if len(redirect.String()) > 0 {
+		domain.Redirect.String = redirect.String()
+		domain.Redirect.Valid = true
+	}
+
 	domain.LandingPage = data.LandingPage
 	c.domainRepo.Persist(domain)
 	if created {

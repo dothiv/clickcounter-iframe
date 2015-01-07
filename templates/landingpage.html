@@ -19,9 +19,9 @@
                   click4life.hiv
 
 -->
-<html lang="{{.LandingPage.Locale}}">
+<html lang="{{.Locale}}">
 <head>
-    <title>{{.LandingPage.Title}}</title>
+    <title>{{.Title}}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -114,46 +114,46 @@
 <main class="container">
     <header class="row">
         <div class="col-xs-12 col-sm-8 col-sm-offset-2">
-            <img src="https://images.contentful.com/v1tfkf6dwlm6/zPLCzensZ2KMQskgceGA8/4d03f5a0f9b2d41e75c4479684588215/header.jpg?w=960" alt="{{.LandingPage.Title}}" width="960" class="ribbon">
+            <img src="https://images.contentful.com/v1tfkf6dwlm6/zPLCzensZ2KMQskgceGA8/4d03f5a0f9b2d41e75c4479684588215/header.jpg?w=960" alt="{{.Title}}" width="960" class="ribbon">
         </div>
     </header>
     <article class="row">
         <div class="col-xs-12 col-sm-8 col-sm-offset-2">
             <h1>
-                {{.LandingPage.Title}} </h1>
+                {{.Title}} </h1>
 
             <p>
-                {{.LandingPage.About}} </p>
+                {{.About}} </p>
 
             <p>
-                {{.LandingPage.MicroDonation}} </p>
+                {{.MicroDonation}} </p>
             <nav>
-                <a href="https://click4life.hiv/{{.LandingPage.Locale}}/" rel="friend" class="pull-left button">{{.LandingPage.LearnMore}}</a>
-                <a href="https://tld.hiv.dev/{{.LandingPage.Locale}}/shop" rel="friend" class="pull-right button">{{.LandingPage.GetYourOwn}}</a>
+                <a href="https://click4life.hiv/{{.Locale}}/" rel="friend" class="pull-left button">{{.LearnMore}}</a>
+                <a href="https://tld.hiv.dev/{{.Locale}}/shop" rel="friend" class="pull-right button">{{.GetYourOwn}}</a>
             </nav>
         </div>
     </article>
     <aside class="row tellyourfriends">
         <h2 class="col-xs-12 col-sm-8 col-sm-offset-2">
-            {{.LandingPage.TellYourFriends}} </h2>
+            {{.TellYourFriends}} </h2>
 
         <div class="col-xs-10 col-sm-7 col-sm-offset-2">
             <p class="tweet">
-                {{.LandingPage.Tweet}} </p>
+                {{.Tweet}} </p>
         </div>
         <div class="col-xs-2 col-sm-1 text-left">
-            <a href="https://twitter.com/intent/tweet?text={{.LandingPage.TweetEncoded}}" class="tweet">
+            <a href="https://twitter.com/intent/tweet?text={{.TweetEncoded}}" class="tweet">
                 <i class="ion-social-twitter"></i> </a>
         </div>
     </aside>
     <footer>
         <div>
-            <a href="https://click4life.hiv/{{.LandingPage.Locale}}/" rel="friend">
+            <a href="https://click4life.hiv/{{.Locale}}/" rel="friend">
                 <img src="https://assets.contentful.com/v1tfkf6dwlm6/oM4cqnguFEMok4EIeiI8u/beeedeac7252147bfffd5100d917566a/logo.svg" alt="dotHIV – The digital Red Ribbon" class="logo">
             </a>
         </div>
         <div class="imprint">
-            <a href="https://tld.hiv/{{.LandingPage.Locale}}/c/imprint">{{.LandingPage.Imprint}} </a>
+            <a href="https://tld.hiv/{{.Locale}}/c/imprint">{{.Imprint}} </a>
         </div>
     </footer>
 </main>

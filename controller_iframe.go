@@ -40,6 +40,7 @@ func (c *IframeController) IframeHandler(w http.ResponseWriter, r *http.Request,
 	}
 	domain, err := c.domainRepo.FindByName(hivDomainName)
 	if err != nil {
+		print(err.Error())
 		w.WriteHeader(http.StatusNotFound)
 		log.Println("Domain not found:", hivDomainName)
 		return
@@ -49,14 +50,22 @@ func (c *IframeController) IframeHandler(w http.ResponseWriter, r *http.Request,
 	w.Header().Add("Expires", time.Now().Add(c.cacheLifetTime).Format(http.TimeFormat))
 	w.Header().Add("Last-Modified", domain.Updated.Format(http.TimeFormat))
 
+	var locale = GetClientLocales(r.Header.Get("Accept-Language"))[0]
+
 	var tpl *template.Template
-	if len(domain.Redirect) > 0 {
+	var data interface{}
+	if domain.Redirect.Valid {
 		tpl, err = getIframeTemplate()
+		data = domain
 	} else {
-		tpl, err = getLandingPageTemplate()
-		if &domain.LandingPage.Tweet != nil {
-			domain.LandingPage.TweetEncoded = url.QueryEscape(domain.LandingPage.Tweet)
+		if _, ok := domain.LandingPage.Strings[locale]; !ok {
+			locale = domain.LandingPage.DefaultLocale
 		}
+		tpl, err = getLandingPageTemplate()
+		if &domain.LandingPage.Strings[locale].Tweet != nil {
+			domain.LandingPage.Strings[locale].TweetEncoded = url.QueryEscape(domain.LandingPage.Strings[locale].Tweet)
+		}
+		data = domain.LandingPage.Strings[locale]
 	}
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -64,7 +73,7 @@ func (c *IframeController) IframeHandler(w http.ResponseWriter, r *http.Request,
 		log.Println(err.Error())
 		return
 	}
-	err = tpl.Execute(w, domain)
+	err = tpl.Execute(w, data)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Println("failed to parse template")

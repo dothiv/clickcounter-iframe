@@ -58,7 +58,7 @@ func TestThatItCreatesDomainConfig(t *testing.T) {
 
 	assert.Equal(1, d.Id)
 	assert.Equal("example.hiv", d.Name)
-	assert.Equal("http://example.com/", d.Redirect)
+	assert.Equal("http://example.com/", d.Redirect.String)
 }
 
 func TestThatItUpdatesDomainConfig(t *testing.T) {
@@ -67,7 +67,8 @@ func TestThatItUpdatesDomainConfig(t *testing.T) {
 	cntrl, repo := SetupAdminTest(t)
 	d := new(Domain)
 	d.Name = "acme.hiv"
-	d.Redirect = "http://acme.info/"
+	d.Redirect.String = "http://acme.info/"
+	d.Redirect.Valid = true
 	repo.Persist(d)
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -97,7 +98,7 @@ func TestThatItUpdatesDomainConfig(t *testing.T) {
 
 	assert.Equal(1, d.Id)
 	assert.Equal("acme.hiv", d.Name)
-	assert.Equal("http://acme.com/", d.Redirect)
+	assert.Equal("http://acme.com/", d.Redirect.String)
 }
 
 func TestThatItDeletesDomainConfig(t *testing.T) {
@@ -106,7 +107,8 @@ func TestThatItDeletesDomainConfig(t *testing.T) {
 	cntrl, repo := SetupAdminTest(t)
 	d := new(Domain)
 	d.Name = "microsoft.hiv"
-	d.Redirect = "http://microsoft.com/"
+	d.Redirect.String = "http://microsoft.com/"
+	d.Redirect.Valid = true
 	repo.Persist(d)
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
