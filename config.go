@@ -6,7 +6,7 @@ import (
 	"code.google.com/p/gcfg"
 )
 
-const VERSION = "1"
+const VERSION = "v1.10.3"
 
 type Config struct {
 	Server struct {

@@ -39,7 +39,7 @@ func Serve(c *Config) (err error) {
 		return
 	}
 
-	log.Println(fmt.Sprintf("Starting server on port %d ...", c.Server.Port))
+	log.Println(fmt.Sprintf("Starting server %s on port %d ...", VERSION, c.Server.Port))
 
 	domainRepo := NewDomainRepository(db)
 
