@@ -65,6 +65,7 @@ func (c *IframeController) IframeHandler(w http.ResponseWriter, r *http.Request,
 		if &domain.LandingPage.Strings[locale].Tweet != nil {
 			domain.LandingPage.Strings[locale].TweetEncoded = url.QueryEscape(domain.LandingPage.Strings[locale].Tweet)
 		}
+		domain.LandingPage.Strings[locale].Locale = locale
 		data = domain.LandingPage.Strings[locale]
 	}
 	if err != nil {

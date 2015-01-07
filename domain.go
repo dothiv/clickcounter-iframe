@@ -25,7 +25,7 @@ type LandingPage struct {
 }
 
 type LandingPageText struct {
-	Locale          string `json:"locale"`
+	Locale          string `json:"-"`
 	Title           string `json:"title"`
 	About           string `json:"about"`
 	MicroDonation   string `json:"microDonation"`
@@ -33,6 +33,6 @@ type LandingPageText struct {
 	GetYourOwn      string `json:"getYourOwn"`
 	TellYourFriends string `json:"tellYourFriends"`
 	Tweet           string `json:"tweet"`
-	TweetEncoded    string
+	TweetEncoded    string `json:"-"`
 	Imprint         string `json:"imprint"`
 }
