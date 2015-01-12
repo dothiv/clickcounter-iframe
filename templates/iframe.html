@@ -41,6 +41,20 @@
             padding: 0;
         }
     </style>
+	<!-- Twitter cards support -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="dotHIV">
+    <meta name="twitter:title" content="{{.Name}} | dotHIV – The digital Red Ribbon">
+    <meta name="twitter:description" content="dotHIV brings the domain ending .hiv to the Internet - as the digital Red Ribbon. For the first time in the history of the Internet a Top-Level Domain is designed solely for a social cause: the end of AIDS! Get to know more about our Mission, the Goal and the contribution of dotHIV in the fight against AIDS.">
+    <meta name="twitter:creator" content="dotHIV">
+    <meta name="twitter:image:src" content="https://click4life.hiv/images/84b2117.png?1420739057">
+	<!-- Facebook open graph support -->
+    <meta property="og:title" content="{{.Name}} | dotHIV – The digital Red Ribbon">
+    <meta property="og:description" content="dotHIV brings the domain ending .hiv to the Internet - as the digital Red Ribbon. For the first time in the history of the Internet a Top-Level Domain is designed solely for a social cause: the end of AIDS! Get to know more about our Mission, the Goal and the contribution of dotHIV in the fight against AIDS.">
+    <meta property="og:site_name" content="{{.Name}}">
+    <meta property="og:image" content="https://click4life.hiv/images/84b2117.png?1420739057">
+    <meta property="og:type" content="website">
+    <meta property="fb:app_id" content="486753724803417">
 </head>
 <body>
 <iframe src="{{.Redirect.String}}" width="100%" height="100%" id="clickcounter-target-iframe"></iframe>
