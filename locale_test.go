@@ -18,5 +18,4 @@ func TestThatItParsesLocale(t *testing.T) {
 	assert.Equal("de", locales3[0])
 	assert.Equal("en-US", locales3[1])
 	assert.Equal("en", locales3[2])
-
 }

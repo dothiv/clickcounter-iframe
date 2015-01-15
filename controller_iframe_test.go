@@ -33,7 +33,7 @@ func SetupDomainTest(t *testing.T) (cntrl *IframeController) {
 	caro4life := new(Domain)
 	caro4life.Name = "caro4life.hiv"
 	lp := new(LandingPage)
-	lp.DefaultLocale = "de"
+	lp.DefaultLocale = "fr"
 	lp.Strings = make(map[string]*LandingPageText)
 	lp.Strings["de"] = new(LandingPageText)
 	lp.Strings["de"].Locale = "de"

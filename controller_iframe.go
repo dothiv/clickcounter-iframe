@@ -50,7 +50,7 @@ func (c *IframeController) IframeHandler(w http.ResponseWriter, r *http.Request,
 	w.Header().Add("Expires", time.Now().Add(c.cacheLifetTime).Format(http.TimeFormat))
 	w.Header().Add("Last-Modified", domain.Updated.Format(http.TimeFormat))
 
-	var locale = GetClientLocales(r.Header.Get("Accept-Language"))[0]
+	var locale = GetClientLocales(r.Header.Get("Accept-Language"))[0][0:2]
 
 	var tpl *template.Template
 	var data interface{}
