@@ -39,7 +39,6 @@ func SetupDomainTest(t *testing.T) (cntrl *IframeController) {
 	lp.Strings["de"].Locale = "de"
 	lp.Strings["de"].Title = "Carolin's digital Red Ribbon"
 	lp.Strings["de"].About = "I support the global, digital movement to see the end of AIDS. Together we can do it! Let’s build an AIDS free generation."
-	lp.Strings["de"].MicroDonation = "Every visit to this website triggers a much needed donation to global HIV projects. Thank you!"
 	lp.Strings["de"].LearnMore = "Learn more"
 	lp.Strings["de"].GetYourOwn = "Get your own"
 	lp.Strings["de"].TellYourFriends = "Tell your friends:"

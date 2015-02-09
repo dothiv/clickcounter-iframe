@@ -28,7 +28,6 @@ type LandingPageText struct {
 	Locale          string `json:"-"`
 	Title           string `json:"title"`
 	About           string `json:"about"`
-	MicroDonation   string `json:"microDonation"`
 	LearnMore       string `json:"learnMore"`
 	GetYourOwn      string `json:"getYourOwn"`
 	TellYourFriends string `json:"tellYourFriends"`
